@@ -1,0 +1,19 @@
+
+js_import /etc/nginx/js/aws.js;
+
+js_set $getSignedUrl aws.getSignedUrl;
+
+server {
+    js_var $s3_host "${S3_HOST}";
+
+    listen 80;
+
+    location / {
+        js_var $s3_key $request_uri;
+        js_var $s3_bucket "${S3_BUCKET}";
+        js_var $s3_accessKey "${S3_ACCESS_KEY}";
+        js_var $s3_secretAccessKey "${S3_SECRET_ACCESS_KEY}";
+        proxy_pass $getSignedUrl;
+    }
+
+}
